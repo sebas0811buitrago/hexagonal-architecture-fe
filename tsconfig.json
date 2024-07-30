@@ -12,8 +12,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "moduleDetection": "force",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@login/*": ["src/features/login/*"],
+      "@test/*": ["src/test/*"],
+      "@shared/*": ["src/shared"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
