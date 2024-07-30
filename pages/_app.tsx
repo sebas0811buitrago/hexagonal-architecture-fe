@@ -1,9 +1,12 @@
-import '@/styles/globals.css';
-import { server } from '@test/mocks/handlers/auth';
-import type { AppProps } from 'next/app';
-
-server.listen();
+import { Toaster } from "@shared/components/ui/toaster";
+import "@styles/globals.css";
+import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Component {...pageProps} />;
+      <Toaster />
+    </>
+  );
 }

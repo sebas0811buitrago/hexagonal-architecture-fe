@@ -17,7 +17,8 @@
     "paths": {
       "@login/*": ["src/features/login/*"],
       "@test/*": ["src/test/*"],
-      "@shared/*": ["src/shared"]
+      "@shared/*": ["src/shared/*"],
+      "@styles/*": ["styles/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

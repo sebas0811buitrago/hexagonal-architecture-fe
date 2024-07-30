@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
+import { setupServer } from 'msw/native';
 
 export const handlers = [
   http.post('/login', async ({ request }) => {

@@ -1,5 +1,5 @@
-import { LoginUserPort } from '@login/application/loginUser';
-import api from 'src/shared/services/api';
+import { LoginUserPort } from "@login/application/loginUser";
+import api from "src/shared/services/api";
 
 interface Login {
   user: string;
@@ -17,19 +17,22 @@ interface LoginServiceResponse {
 
 const loginService = async (credentials: Login) => {
   return await api
-    .post('/login', {
-      json: credentials
+    .post("/login", {
+      json: credentials,
     })
     .json<LoginServiceResponse>();
 };
 
 const login: LoginUserPort = async ({ password, username }) => {
-  const { user } = await loginService({
-    user: username,
-    password
-  });
+  // const { user } = await loginService({
+  //   user: username,
+  //   password
+  // });
 
-  return user;
+  return {
+    email: "sebas@gmail.com",
+    name: "sebas",
+  };
 };
 
 export default login;
