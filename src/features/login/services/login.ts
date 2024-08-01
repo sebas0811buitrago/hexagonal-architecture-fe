@@ -24,10 +24,10 @@ const loginService = async (credentials: Login) => {
 };
 
 const login: LoginUserPort = async ({ password, username }) => {
-  // const { user } = await loginService({
-  //   user: username,
-  //   password
-  // });
+  const { user } = await loginService({
+    user: username,
+    password,
+  });
 
   return {
     email: "sebas@gmail.com",

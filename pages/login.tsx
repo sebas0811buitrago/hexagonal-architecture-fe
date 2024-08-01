@@ -1,5 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@shared/components/ui/button";
 import { Input } from "@shared/components/ui/input";
 import {
@@ -19,6 +19,8 @@ import { useAtom } from "jotai";
 import { useToast } from "@shared/components/ui/use-toast";
 import { useRouter } from "next/router";
 import { ZodError } from "zod";
+import { monitoringErrors } from "@shared/services/monitoring-errors";
+import { trackingEvent } from "@shared/services/track-events";
 
 export default function Login() {
   const [, setAuthenticatedUser] = useAtom(authenticatedUserAtom);
@@ -28,7 +30,7 @@ export default function Login() {
   const { toast } = useToast();
 
   const form = useForm<UserCredentials>({
-    // resolver: zodResolver(credentialsSchema),
+    resolver: zodResolver(credentialsSchema),
     defaultValues: {
       username: "",
     },
@@ -36,25 +38,32 @@ export default function Login() {
 
   async function onSubmit(userCredentials: UserCredentials) {
     try {
-      const user = await loginUser(login)(userCredentials);
+      const user = await loginUser({
+        login,
+        trackEvent: trackingEvent,
+        monitoring: monitoringErrors,
+      })(userCredentials);
+
       setAuthenticatedUser(user);
 
       router.push("/");
     } catch (error) {
       if (error instanceof ZodError) {
-        console.log(error.flatten());
-        const errorMessage = error.errors.map((e) => e.message).join(", ");
+        const errorMessage = error.errors
+          .map((error) => error.message)
+          .join(", ");
 
         toast({
           title: errorMessage,
           variant: "destructive",
         });
-      } else {
-        toast({
-          title: "Somehing went wrong ",
-          variant: "destructive",
-        });
+        return;
       }
+
+      toast({
+        title: "Somehing went wrong",
+        variant: "destructive",
+      });
     }
   }
 

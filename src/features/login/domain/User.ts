@@ -11,3 +11,5 @@ export const credentialsSchema = z.object({
 });
 
 export type UserCredentials = z.infer<typeof credentialsSchema>;
+
+export const LOGIN_EVENT = "User log in ";

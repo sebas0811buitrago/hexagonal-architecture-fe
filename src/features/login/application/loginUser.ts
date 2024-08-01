@@ -1,10 +1,40 @@
-import { credentialsSchema, User, UserCredentials } from '@login/domain/User';
+import {
+  credentialsSchema,
+  LOGIN_EVENT,
+  User,
+  UserCredentials,
+} from "@login/domain/User";
+import { Analytics } from "@shared/application/analytics-port";
+import { Monitoring } from "@shared/application/monitoring-port";
 
 export type LoginUserPort = (credentials: UserCredentials) => Promise<User>;
 
-export const loginUser =
-  (login: LoginUserPort) => async (credentials: UserCredentials) => {
-    credentialsSchema.parse(credentials);
+interface LoginUserDependencies {
+  login: LoginUserPort;
+}
 
-    return await login(credentials);
+export const loginUser =
+  ({
+    login,
+    trackEvent,
+    monitoring,
+  }: LoginUserDependencies & Monitoring & Analytics) =>
+  async (credentials: UserCredentials) => {
+    try {
+      credentialsSchema.parse(credentials);
+      const response = await login(credentials);
+
+      trackEvent &&
+        trackEvent({
+          title: LOGIN_EVENT,
+        });
+      return response;
+    } catch (error) {
+      monitoring &&
+        monitoring({
+          error,
+        });
+
+      throw error;
+    }
   };
