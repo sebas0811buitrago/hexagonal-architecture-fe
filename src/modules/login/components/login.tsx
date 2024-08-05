@@ -26,11 +26,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface LoginProps {
-  onSuccesfulLoggin: () => void;
+  onSuccesfulLogin: () => void;
   login: LoginUserPort;
 }
 
-const Login = ({ onSuccesfulLoggin, login }: LoginProps) => {
+const Login = ({ onSuccesfulLogin, login }: LoginProps) => {
   const [, setAuthenticatedUser] = useAtom(authenticatedUserAtom);
 
   const { toast } = useToast();
@@ -53,7 +53,7 @@ const Login = ({ onSuccesfulLoggin, login }: LoginProps) => {
 
       setAuthenticatedUser(user);
 
-      onSuccesfulLoggin();
+      onSuccesfulLogin();
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessage = error.errors

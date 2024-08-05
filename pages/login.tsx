@@ -1,5 +1,4 @@
-import { Login } from "@login/.";
-import { login } from "@login/.";
+import { Login, login } from "@login/.";
 import { useRouter } from "next/router";
 
 const LoginPage = () => {
@@ -7,7 +6,7 @@ const LoginPage = () => {
 
   return (
     <Login
-      onSuccesfulLoggin={() => {
+      onSuccesfulLogin={() => {
         router.push("/professional-skills");
       }}
       login={login}

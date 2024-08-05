@@ -8,13 +8,13 @@ import Login from "@login/components/login";
 
 describe("login", () => {
   test("should redirect the user when logging is succesful", async () => {
-    const onSuccesfulLoggin = vi.fn();
+    const onSuccesfulLogin = vi.fn();
     const login = vi.fn();
 
     const fakeUserName = faker.internet.userName();
     const fakeUserPassword = faker.internet.password();
 
-    render(<Login onSuccesfulLoggin={onSuccesfulLoggin} login={login} />);
+    render(<Login onSuccesfulLogin={onSuccesfulLogin} login={login} />);
 
     const username = screen.getByRole("textbox", { name: /user name/i });
     const password = screen.getByRole("textbox", { name: /password/i });
@@ -24,7 +24,7 @@ describe("login", () => {
     await userEvent.type(password, fakeUserPassword);
     await userEvent.click(loginButton);
 
-    expect(onSuccesfulLoggin).toHaveBeenCalledOnce();
+    expect(onSuccesfulLogin).toHaveBeenCalledOnce();
     expect(login).toHaveBeenNthCalledWith(1, {
       password: fakeUserPassword,
       username: fakeUserName,
@@ -32,9 +32,9 @@ describe("login", () => {
   });
 
   test("should show error messages if username and password are less than 3 characters", async () => {
-    const onSuccesfulLoggin = vi.fn();
+    const onSuccesfulLogin = vi.fn();
     const login = vi.fn();
-    render(<Login onSuccesfulLoggin={onSuccesfulLoggin} login={login} />);
+    render(<Login onSuccesfulLogin={onSuccesfulLogin} login={login} />);
 
     const loginButton = screen.getByRole("button", { name: /^login$/i });
 
@@ -42,7 +42,7 @@ describe("login", () => {
 
     const inputsErrorMessages = screen.getAllByRole("alert");
 
-    expect(onSuccesfulLoggin).not.toHaveBeenCalledOnce();
+    expect(onSuccesfulLogin).not.toHaveBeenCalledOnce();
     expect(login).not.toHaveBeenCalledOnce();
     expect(inputsErrorMessages).toHaveLength(2);
   });
