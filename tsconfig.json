@@ -15,7 +15,9 @@
     "moduleDetection": "force",
     "baseUrl": ".",
     "paths": {
-      "@login/*": ["src/features/login/*"],
+      "@pages/*": ["pages/*"],
+      "@login/*": ["src/modules/login/*"],
+      "@professional-skills/*": ["src/modules/professional-skills/*"],
       "@test/*": ["src/test/*"],
       "@shared/*": ["src/shared/*"],
       "@styles/*": ["styles/*"]

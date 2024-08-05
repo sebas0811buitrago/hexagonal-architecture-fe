@@ -1,5 +1,4 @@
-import { LoginUserPort } from "@login/application/loginUser";
-import api from "src/shared/services/api";
+import { LoginUserPort } from "@login/application/login-user-use-case";
 
 interface Login {
   user: string;
@@ -16,22 +15,26 @@ interface LoginServiceResponse {
 }
 
 const loginService = async (credentials: Login) => {
-  return await api
-    .post("/login", {
-      json: credentials,
-    })
-    .json<LoginServiceResponse>();
+  return {
+    email: "sebas@gmail.com",
+    name: "sebas",
+  };
+  // return await api
+  //   .post("/login-user", {
+  //     json: credentials,
+  //   })
+  //   .json<LoginServiceResponse>();
 };
 
 const login: LoginUserPort = async ({ password, username }) => {
-  const { user } = await loginService({
+  const { email, name } = await loginService({
     user: username,
     password,
   });
 
   return {
-    email: "sebas@gmail.com",
-    name: "sebas",
+    email,
+    name,
   };
 };
 

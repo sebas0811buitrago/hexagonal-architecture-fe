@@ -3,7 +3,7 @@ import {
   LOGIN_EVENT,
   User,
   UserCredentials,
-} from "@login/domain/User";
+} from "@login/domain/user";
 import { Analytics } from "@shared/application/analytics-port";
 import { Monitoring } from "@shared/application/monitoring-port";
 
