@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@shared/components/ui/card";
+import { useGetBMIRecords } from "../services/getBMIRecords";
 
 const {
   height: heightSchema,
@@ -43,6 +44,8 @@ const IBMCalculator = () => {
   const [bmi, setBMI] = useState<number>();
   const [bmiDescription, setBMIDescription] = useState<string>();
 
+  const { data: bmiRecords, mutate } = useGetBMIRecords();
+
   const form = useForm<FormBMI>({
     resolver: zodResolver(ibmFormSchema),
     defaultValues: {
@@ -52,18 +55,24 @@ const IBMCalculator = () => {
     },
   });
 
+  const { setValue } = form;
+
   const { toast } = useToast();
 
-  const onSubmit = async ({ height, weight, userName }: FormBMI) => {
+  const onSubmit = async (formData: FormBMI) => {
     try {
-      const formatedData = ibmFormSchema.parse({ height, weight, userName });
+      const { height, userName, weight } = ibmFormSchema.parse(formData);
 
       const { bmi, description } = await calculateBMIUseCase({
         createBMIUserRecord: createBMIRecord,
-      })(formatedData);
+      })({ height, userName, weight });
 
       setBMI(bmi);
       setBMIDescription(description);
+
+      setValue("userName", userName);
+
+      mutate();
     } catch (error) {
       if (error instanceof ZodError) {
         if (error instanceof ZodError) {
@@ -87,92 +96,120 @@ const IBMCalculator = () => {
   };
 
   return (
-    <div className="max-md: my-auto flex w-full flex-1 justify-center gap-10">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex max-w-[500px] flex-1 flex-col gap-[20px]"
-        >
-          <h1 className="text-2xl leading-tight tracking-tighter">
-            Calculate your BMI
-          </h1>
-          <div className="flex flex-col gap-4">
-            <FormField
-              control={form.control}
-              name="weight"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Weight (Kg)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="0"
-                      type="number"
-                      step="0.1"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage aria-live="polite" role="alert" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="height"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Height (m)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="0"
-                      type="number"
-                      step="0.1"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage aria-live="polite" role="alert" />
-                </FormItem>
-              )}
-            />
+    <>
+      <div className="max-md: my-auto flex w-full flex-1 justify-center gap-10">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex max-w-[500px] flex-1 flex-col gap-[20px]"
+          >
+            <h1 className="text-2xl leading-tight tracking-tighter">
+              Calculate your BMI
+            </h1>
+            <div className="flex flex-col gap-4">
+              <FormField
+                control={form.control}
+                name="weight"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Weight (Kg)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="0"
+                        type="number"
+                        step="0.1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage aria-live="polite" role="alert" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="height"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Height (m)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="0"
+                        type="number"
+                        step="0.1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage aria-live="polite" role="alert" />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="userName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="sebas" {...field} />
-                  </FormControl>
-                  <FormMessage aria-live="polite" role="alert" />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="userName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="sebas" {...field} />
+                    </FormControl>
+                    <FormMessage aria-live="polite" role="alert" />
+                  </FormItem>
+                )}
+              />
 
-            <div className="grid gap-4">
-              <Button type="submit" className="w-full">
-                Calculate
-              </Button>
+              <div className="grid gap-4">
+                <Button type="submit" className="w-full">
+                  Calculate
+                </Button>
+              </div>
             </div>
-          </div>
-        </form>
-      </Form>
+          </form>
+        </Form>
 
-      <Card className="self-baseline">
-        <CardHeader className="p-4 pb-0">
-          <CardTitle className="font-normal">Body Mass Index </CardTitle>
-          <CardDescription>{bmiDescription}</CardDescription>
-        </CardHeader>
+        <Card className="max-w-[300px] flex-1 self-baseline">
+          <CardHeader className="p-4 pb-0">
+            <CardTitle className="font-normal">
+              Current Body Mass Index{" "}
+            </CardTitle>
+            <CardDescription>{bmiDescription}</CardDescription>
+          </CardHeader>
 
-        <CardContent className="flex flex-row items-baseline gap-4 p-4">
-          <div className="flex items-baseline gap-1 text-2xl leading-none">
-            {bmi}
-            <span className="text-sm font-normal text-muted-foreground">
-              BMI
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          <CardContent className="flex flex-row items-baseline gap-4 p-4">
+            <div className="flex items-baseline gap-1 text-2xl leading-none">
+              {bmi}
+              <span className="text-sm font-normal text-muted-foreground">
+                BMI
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex flex-wrap gap-6">
+        {bmiRecords?.map(({ bmi, date, user, id }) => (
+          <Card
+            className="min-w-[150] max-w-[300px] flex-1 self-baseline"
+            key={id}
+          >
+            <CardHeader className="p-4 pb-0">
+              <CardTitle className="font-normal">BMI</CardTitle>
+              <CardDescription>{date}</CardDescription>
+              <CardDescription> {user}</CardDescription>
+            </CardHeader>
+
+            <CardContent className="flex flex-row items-baseline gap-4 p-4">
+              <div className="flex items-baseline gap-1 text-2xl leading-none">
+                {bmi}
+                <span className="text-sm font-normal text-muted-foreground">
+                  BMI
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </>
   );
 };
 

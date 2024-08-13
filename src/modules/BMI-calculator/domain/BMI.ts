@@ -1,20 +1,21 @@
 import { z } from "zod";
 
-export const userNameSchema = z.string().min(1, "User Name Required").trim();
+export const userNameSchema = z
+  .string()
+  .min(1, "User Name Required")
+  .transform((value) => value.trim());
 
 export const bodyMetricsSchema = z.object({
   weight: z
     .number()
     .positive("Kilograms must be a positive number")
     .min(1, "Kilograms must be greater than 1")
-    .max(500, "Kilograms must be less than 500")
-    .nonnegative("Kilograms must be non-negative"),
+    .max(500, "Kilograms must be less than 500"),
   height: z
     .number()
     .positive("Height must be a positive number")
     .min(0.3, "Height must be greater than 0.3 m")
-    .max(2.5, "Height must be less than 2.5 m")
-    .nonnegative("Height must be non-negative"),
+    .max(2.5, "Height must be less than 2.5 m"),
 });
 
 export type BodyMetrics = z.infer<typeof bodyMetricsSchema>;
@@ -22,12 +23,11 @@ export type BodyMetrics = z.infer<typeof bodyMetricsSchema>;
 export interface BMIUserRecord {
   bmi: number;
   user: string;
-  date: string;
 }
 
-export const BMICalculator = ({ weight, height }: BodyMetrics) => {
-  bodyMetricsSchema.parse({ weight, height });
+export type BMIRecord = BMIUserRecord & { id: string; date: string };
 
+export const BMICalculator = ({ weight, height }: BodyMetrics) => {
   return Number((weight / height ** 2).toFixed(1));
 };
 
@@ -72,7 +72,7 @@ export const BMIDescription = ({
       bmi,
       currentHeight,
       currentWeight,
-    })} underweight`;
+    })} kg underweight`;
   if (bmi <= NORMAL_THRESHOLD) return "You have a normal weight";
   if (bmi <= OVERWEIGHT_THRESHOLD)
     return `You are ${calculateOverWeight({

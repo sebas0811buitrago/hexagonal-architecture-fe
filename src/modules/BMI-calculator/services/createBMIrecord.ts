@@ -1,11 +1,17 @@
 import { CreateBMIUserRecordPort } from "../application/calculate-bmi-use-case";
-
-const createBMIRecordService = () => {};
+import { createItem } from "./localStorageService";
+import { v4 as uuidv4 } from "uuid";
 
 export const createBMIRecord: CreateBMIUserRecordPort = async ({
   bmi,
-  date,
+
   user,
 }) => {
-  console.log("record create ", bmi, date, user);
+  createItem({
+    id: uuidv4(),
+    date: new Date().toDateString(),
+    bmi,
+
+    user,
+  });
 };

@@ -33,7 +33,7 @@ const calculateBMIUseCase =
 
     await createBMIUserRecord({
       bmi,
-      date: new Date().toDateString(),
+
       user: userName,
     });
 
