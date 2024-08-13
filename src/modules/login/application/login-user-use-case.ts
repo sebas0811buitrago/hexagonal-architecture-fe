@@ -22,6 +22,7 @@ export const loginUserUseCase =
   async (credentials: UserCredentials) => {
     try {
       credentialsSchema.parse(credentials);
+
       const response = await login(credentials);
 
       trackEvent &&

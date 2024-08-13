@@ -16,8 +16,8 @@ interface LoginServiceResponse {
 
 const loginService = async (credentials: Login) => {
   return {
-    email: "sebas@gmail.com",
-    name: "sebas",
+    emailUser: "sebas@gmail.com",
+    nameUser: "sebas",
   };
   // return await api
   //   .post("/login-user", {
@@ -27,14 +27,14 @@ const loginService = async (credentials: Login) => {
 };
 
 const login: LoginUserPort = async ({ password, username }) => {
-  const { email, name } = await loginService({
+  const { emailUser, nameUser } = await loginService({
     user: username,
     password,
   });
 
   return {
-    email,
-    name,
+    email: emailUser,
+    name: nameUser,
   };
 };
 

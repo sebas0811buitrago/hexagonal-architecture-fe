@@ -1,12 +1,9 @@
-import { useAtom } from "jotai";
-import { authenticatedUserAtom } from "@login/store";
+import IBMCalculator from "src/modules/BMI-calculator/components/IBMCalculator";
 
 export default function Home() {
-  const [{ email, name }] = useAtom(authenticatedUserAtom);
-
   return (
-    <main>
-      Welcome : {name} , {email}
+    <main className="flex h-full">
+      <IBMCalculator />
     </main>
   );
 }
