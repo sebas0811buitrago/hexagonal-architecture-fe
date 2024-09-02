@@ -35,7 +35,6 @@ import {
   TableHeader,
   TableRow,
 } from "@shared/components/ui/table";
-import { BMIDescription } from "../domain/BMI";
 import { GetBMIRecordsPort } from "../application/get-bmi-records-use-case";
 import { useGetBMIRecords } from "../hooks/useGetBMIRecord";
 

@@ -3,6 +3,8 @@
 import { prisma } from "@shared/prisma/prisma";
 import { CreateBMIUserRecordPort } from "../../application/calculate-bmi-use-case";
 
+import { revalidatePath } from "next/cache";
+
 export const createBMIRecordDatabase: CreateBMIUserRecordPort = async ({
   bmi,
   user,
@@ -13,4 +15,6 @@ export const createBMIRecordDatabase: CreateBMIUserRecordPort = async ({
       username: user,
     },
   });
+
+  revalidatePath("/bmi-app-router");
 };

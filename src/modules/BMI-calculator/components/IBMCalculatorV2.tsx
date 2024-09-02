@@ -29,7 +29,7 @@ import {
   CardTitle,
 } from "@shared/components/ui/card";
 import { useState } from "react";
-import calculateBMIUseCase, {
+import {
   calculateBMIUseCaseSchema,
   CreateBMIUserRecordPort,
 } from "../application/calculate-bmi-use-case";
@@ -37,6 +37,7 @@ import { z, ZodError } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@shared/components/ui/button";
 import { useToast } from "@shared/components/ui/use-toast";
+import calculateBMIUseCaseServer from "./server/calculate-bmi-use-case-server";
 
 const {
   height: heightSchema,
@@ -80,15 +81,8 @@ const IBMCalculatorV2 = ({
   const onSubmit = async (formData: FormBMI) => {
     try {
       const { height, userName, weight } = ibmFormSchema.parse(formData);
-      // const { bmi, description } = await calculateBMIUseCaseServer({
-      //   createBMIUserRecord: createBMIRecord,
-      // })({
-      //   height,
-      //   userName,
-      //   weight,
-      // });
 
-      const { bmi, description } = await calculateBMIUseCase({
+      const { bmi, description } = await calculateBMIUseCaseServer({
         createBMIUserRecord: createBMIRecord,
       })({
         height,

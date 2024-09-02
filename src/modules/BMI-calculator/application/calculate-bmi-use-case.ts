@@ -24,7 +24,7 @@ export type CalculateBMIUseCaseParams = BodyMetrics & { userName: string };
 const calculateBMIUseCase =
   ({ createBMIUserRecord }: CalculateBMIUseCase) =>
   async ({ height, weight, userName }: CalculateBMIUseCaseParams) => {
-    console.log("client side");
+    console.log("calculateBMIUseCase");
     calculateBMIUseCaseSchema.parse({ height, weight, userName });
 
     const bmi = BMICalculator({ height, weight });
