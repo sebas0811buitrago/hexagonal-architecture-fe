@@ -25,6 +25,16 @@ import {
   CardTitle,
 } from "@shared/components/ui/card";
 import { useGetBMIRecords } from "../services/getBMIRecords";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@shared/components/ui/table";
+import { BMIDescription } from "../domain/BMI";
 
 const {
   height: heightSchema,
@@ -186,29 +196,30 @@ const IBMCalculator = () => {
         </Card>
       </div>
 
-      <div className="flex flex-wrap gap-6">
-        {bmiRecords?.map(({ bmi, date, user, id }) => (
-          <Card
-            className="min-w-[150] max-w-[300px] flex-1 self-baseline"
-            key={id}
-          >
-            <CardHeader className="p-4 pb-0">
-              <CardTitle className="font-normal">BMI</CardTitle>
-              <CardDescription>{date}</CardDescription>
-              <CardDescription> {user}</CardDescription>
-            </CardHeader>
-
-            <CardContent className="flex flex-row items-baseline gap-4 p-4">
-              <div className="flex items-baseline gap-1 text-2xl leading-none">
-                {bmi}
-                <span className="text-sm font-normal text-muted-foreground">
-                  BMI
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <ScrollArea className="h-[400px] rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Date</TableHead>
+              <TableHead>User</TableHead>
+              <TableHead className="text-right">BMI</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {bmiRecords?.map(({ bmi, date, id, user }) => {
+              return (
+                <TableRow key={id}>
+                  <TableCell className="font-medium">
+                    {new Date(date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{user}</TableCell>
+                  <TableCell className="text-right">{bmi.toFixed(1)}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </ScrollArea>
     </>
   );
 };

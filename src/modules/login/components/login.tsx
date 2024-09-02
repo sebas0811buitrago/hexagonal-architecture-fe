@@ -45,11 +45,15 @@ const Login = ({ onSuccesfulLogin, login }: LoginProps) => {
 
   async function onSubmit(userCredentials: UserCredentials) {
     try {
-      const user = await loginUserUseCase({
-        login,
-        trackEvent,
-        monitoring,
-      })(userCredentials);
+      // const user = await loginUserUseCase({
+      //   login,
+      //   trackEvent,
+      //   monitoring,
+      // })(userCredentials);
+
+      // await login();
+
+      // trackEvent();
 
       setAuthenticatedUser(user);
 
