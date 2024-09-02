@@ -12,7 +12,7 @@ export function getItem<T>(key: string): T | null {
   return item ? JSON.parse(item) : null;
 }
 
-function removeItem(key: string): void {
+export function removeItem(key: string): void {
   localStorage.removeItem(key);
 }
 

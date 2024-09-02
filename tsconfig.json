@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -15,14 +19,38 @@
     "moduleDetection": "force",
     "baseUrl": ".",
     "paths": {
-      "@pages/*": ["pages/*"],
-      "@login/*": ["src/modules/login/*"],
-      "@professional-skills/*": ["src/modules/professional-skills/*"],
-      "@test/*": ["src/test/*"],
-      "@shared/*": ["src/shared/*"],
-      "@styles/*": ["styles/*"]
-    }
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@login/*": [
+        "src/modules/login/*"
+      ],
+      "@professional-skills/*": [
+        "src/modules/professional-skills/*"
+      ],
+      "@test/*": [
+        "src/test/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,31 +1,5 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { Button } from "@shared/components/ui/button";
-import { Input } from "@shared/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@shared/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import calculateBMIUseCase, {
-  calculateBMIUseCaseSchema,
-  CreateBMIUserRecordPort,
-} from "../application/calculate-bmi-use-case";
-import { z, ZodError } from "zod";
-import { useToast } from "@shared/components/ui/use-toast";
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@shared/components/ui/card";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Table,
@@ -35,9 +9,34 @@ import {
   TableHeader,
   TableRow,
 } from "@shared/components/ui/table";
-import { BMIDescription } from "../domain/BMI";
-import { GetBMIRecordsPort } from "../application/get-bmi-records-use-case";
-import { useGetBMIRecords } from "../hooks/useGetBMIRecord";
+
+import { BMIRecord } from "../domain/BMI";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@shared/components/ui/form";
+import { Input } from "@shared/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@shared/components/ui/card";
+import { useState } from "react";
+import calculateBMIUseCase, {
+  calculateBMIUseCaseSchema,
+  CreateBMIUserRecordPort,
+} from "../application/calculate-bmi-use-case";
+import { z, ZodError } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@shared/components/ui/button";
+import { useToast } from "@shared/components/ui/use-toast";
 
 const {
   height: heightSchema,
@@ -54,20 +53,16 @@ const ibmFormSchema = z.object({
 type FormBMI = Record<keyof z.infer<typeof ibmFormSchema>, string>;
 
 interface IBMCalculatorProps {
+  bmiRecords: BMIRecord[];
   createBMIRecord: CreateBMIUserRecordPort;
-  getBMIRecords: GetBMIRecordsPort;
 }
 
-const IBMCalculator = ({
+const IBMCalculatorV2 = ({
+  bmiRecords,
   createBMIRecord,
-  getBMIRecords,
 }: IBMCalculatorProps) => {
   const [bmi, setBMI] = useState<number>();
   const [bmiDescription, setBMIDescription] = useState<string>();
-
-  const { data: bmiRecords, mutate } = useGetBMIRecords({
-    getBMIRecords,
-  });
 
   const form = useForm<FormBMI>({
     resolver: zodResolver(ibmFormSchema),
@@ -85,17 +80,25 @@ const IBMCalculator = ({
   const onSubmit = async (formData: FormBMI) => {
     try {
       const { height, userName, weight } = ibmFormSchema.parse(formData);
+      // const { bmi, description } = await calculateBMIUseCaseServer({
+      //   createBMIUserRecord: createBMIRecord,
+      // })({
+      //   height,
+      //   userName,
+      //   weight,
+      // });
 
       const { bmi, description } = await calculateBMIUseCase({
         createBMIUserRecord: createBMIRecord,
-      })({ height, userName, weight });
-
+      })({
+        height,
+        userName,
+        weight,
+      });
       setBMI(bmi);
       setBMIDescription(description);
 
       setValue("userName", userName);
-
-      mutate();
     } catch (error) {
       if (error instanceof ZodError) {
         if (error instanceof ZodError) {
@@ -208,7 +211,6 @@ const IBMCalculator = ({
           </CardContent>
         </Card>
       </div>
-
       <ScrollArea className="h-[400px] rounded-md border">
         <Table>
           <TableHeader>
@@ -237,4 +239,4 @@ const IBMCalculator = ({
   );
 };
 
-export default IBMCalculator;
+export default IBMCalculatorV2;

@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "BMIRecord" (
+    "id" SERIAL NOT NULL,
+    "bmi" DOUBLE PRECISION NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "username" TEXT NOT NULL,
+
+    CONSTRAINT "BMIRecord_pkey" PRIMARY KEY ("id")
+);
